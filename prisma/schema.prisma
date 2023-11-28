@@ -24,9 +24,9 @@ model Customer {
   id String @id @default(uuid())
   firstName String
   lastName String
-  company String
+  company String?
   email String
-  phone String
+  phone String?
   braintreePublicId String @unique
 
   createdAt DateTime @default(now())

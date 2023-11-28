@@ -15,16 +15,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { getBraintreeClient, getUsBankAccountInstance } from "@/lib/braintree";
 
-import { BraintreeError } from "braintree-web";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import axios from "axios";
@@ -33,43 +24,18 @@ import { useForm } from "react-hook-form";
 import { useModal } from "@/hooks/use-modal-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const accountTypeEnum = z.enum(["SAVINGS", "CHECKING"]);
-const ownershipTypeEnum = z.enum(["BUSINESS", "PERSONAL"]);
-
 const formSchema = z.object({
-    accountNumber: z
-        .string()
-        .min(1, { message: "Account number is required." }),
-    routingNumber: z
-        .string()
-        .min(1, { message: "Routing number is required." }),
-    accountHolderName: z
-        .string()
-        .min(1, { message: "Account holder name is required." }),
-    accountType: accountTypeEnum,
-    ownershipType: ownershipTypeEnum,
+    firstName: z.string().min(1, { message: "First name is required." }),
+    lastName: z.string().min(1, { message: "Last name is required." }),
+    email: z.string().min(1, { message: "Email is required." }),
+    company: z.string(),
+    phone: z.string(),
 });
 
 export const CreateCustomerModal = () => {
     const { isOpen, onClose, type, data } = useModal();
 
     const isModalOpen = isOpen && type == "createCustomer";
-
-    const createCustomer = async () => {
-        try {
-            const payload = {
-                firstName: "Gary",
-                lastName: "Planton",
-                company: "Banksy Trading Co",
-                email: "banksytradingco@gmail.com",
-                phone: "5555555555",
-            };
-            const res = await axios.post("/api/v1/customers", payload);
-            console.log(res.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const tokenizationKey =
         process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY;
@@ -83,88 +49,24 @@ export const CreateCustomerModal = () => {
     };
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const client = await getBraintreeClient(tokenizationKey);
-        if (!client) return;
-        const usBankAccountInstance = await getUsBankAccountInstance(client);
-        if (!usBankAccountInstance) {
-            console.log("Instance unavailable");
-            return;
+        try {
+            await axios.post("/api/v1/customers", values);
+            toast.success("Customer created");
+            form.reset();
+            onClose();
+        } catch (error) {
+            console.log(error);
         }
-
-        const handleTokenize = async function (
-            tokenizeErr: BraintreeError | undefined,
-            tokenizePayload: any
-        ) {
-            if (tokenizeErr) {
-                console.log(tokenizeErr);
-            } else {
-                toast.success("Tokenization successful");
-
-                try {
-                    await axios.post("/api/v1/nonces", tokenizePayload);
-                    // form.reset();
-
-                    onClose();
-                    //router.refresh();
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-        };
-        const billingAddress = {
-            streetAddress: "123 Main Street",
-            extendedAddress: "",
-            locality: "Oakland",
-            region: "CA",
-            postalCode: "94601",
-        };
-
-        let bankDetails;
-        if (values.ownershipType == "BUSINESS") {
-            bankDetails = {
-                accountNumber: values.accountNumber,
-                routingNumber: values.routingNumber,
-                accountType: values.accountType,
-                billingAddress: {
-                    ...billingAddress,
-                },
-                businessOwner: {
-                    businessName: "TEST",
-                },
-            };
-        } else {
-            const [firstName, lastName] = values.accountHolderName.split(" ");
-            bankDetails = {
-                accountNumber: values.accountNumber,
-                routingNumber: values.routingNumber,
-                accountType: values.accountType.toLowerCase(),
-                ownershipType: values.ownershipType.toLowerCase(),
-                firstName,
-                lastName,
-                billingAddress: {
-                    ...billingAddress,
-                },
-            };
-        }
-
-        usBankAccountInstance.tokenize(
-            {
-                mandateText: "",
-                bankDetails,
-                bankLogin: null,
-            },
-            handleTokenize
-        );
     };
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            accountNumber: "1000000000",
-            routingNumber: "121042882",
-            accountHolderName: "Tu Vo",
-            accountType: accountTypeEnum.Enum.CHECKING,
-            ownershipType: ownershipTypeEnum.Enum.PERSONAL,
+            firstName: "",
+            lastName: "",
+            company: "",
+            email: "",
+            phone: "",
         },
     });
 
@@ -175,7 +77,7 @@ export const CreateCustomerModal = () => {
             <DialogContent className="bg-white text-black pt-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-xl text-center font-bold">
-                        Create Nonce
+                        Create Customer
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
@@ -186,14 +88,14 @@ export const CreateCustomerModal = () => {
                         <div className="space-y-8 px-6">
                             <FormField
                                 control={form.control}
-                                name="accountNumber"
+                                name="firstName"
                                 render={({ field }) => (
                                     <FormItem className="text-xs font-bold text-zinc-500 dark:text-secondary">
-                                        <FormLabel>ACCOUNT NUMBER</FormLabel>
+                                        <FormLabel>FIRST NAME</FormLabel>
                                         <FormControl>
                                             <Input
                                                 className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                placeholder="1000000000"
+                                                placeholder="John"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -203,14 +105,14 @@ export const CreateCustomerModal = () => {
                             ></FormField>
                             <FormField
                                 control={form.control}
-                                name="routingNumber"
+                                name="lastName"
                                 render={({ field }) => (
                                     <FormItem className="text-xs font-bold text-zinc-500 dark:text-secondary">
-                                        <FormLabel>ROUTING NUMBER</FormLabel>
+                                        <FormLabel>LAST NAME</FormLabel>
                                         <FormControl>
                                             <Input
                                                 className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                placeholder="121042882"
+                                                placeholder="Doe"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -220,16 +122,14 @@ export const CreateCustomerModal = () => {
                             ></FormField>
                             <FormField
                                 control={form.control}
-                                name="accountHolderName"
+                                name="company"
                                 render={({ field }) => (
                                     <FormItem className="text-xs font-bold text-zinc-500 dark:text-secondary">
-                                        <FormLabel>
-                                            ACCOUNT HOLDER NAME
-                                        </FormLabel>
+                                        <FormLabel>COMPANY</FormLabel>
                                         <FormControl>
                                             <Input
                                                 className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                placeholder="Tu Vo"
+                                                placeholder="Banksy Trading Company"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -239,70 +139,34 @@ export const CreateCustomerModal = () => {
                             ></FormField>
                             <FormField
                                 control={form.control}
-                                name="accountType"
+                                name="email"
                                 render={({ field }) => (
                                     <FormItem className="text-xs font-bold text-zinc-500 dark:text-secondary">
-                                        <FormLabel>ACCOUNT TYPE</FormLabel>
-                                        <Select
-                                            disabled={isLoading}
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
-                                                    <SelectValue placeholder="Select an account type" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem
-                                                    value="SAVINGS"
-                                                    className="capitalize"
-                                                >
-                                                    SAVINGS
-                                                </SelectItem>
-                                                <SelectItem
-                                                    value="CHECKING"
-                                                    className="capitalize"
-                                                >
-                                                    CHECKING
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <FormLabel>EMAIL</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                                placeholder="banksytradingco@gmail.com"
+                                                {...field}
+                                            />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             ></FormField>
                             <FormField
                                 control={form.control}
-                                name="ownershipType"
+                                name="phone"
                                 render={({ field }) => (
                                     <FormItem className="text-xs font-bold text-zinc-500 dark:text-secondary">
-                                        <FormLabel>OWNERSHIP TYPE</FormLabel>
-                                        <Select
-                                            disabled={isLoading}
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
-                                                    <SelectValue placeholder="Select an ownership type" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem
-                                                    value="BUSINESS"
-                                                    className="capitalize"
-                                                >
-                                                    BUSINESS
-                                                </SelectItem>
-                                                <SelectItem
-                                                    value="PERSONAL"
-                                                    className="capitalize"
-                                                >
-                                                    PERSONAL
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <FormLabel>EMAIL</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                                placeholder="555 555 5555"
+                                                {...field}
+                                            />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}

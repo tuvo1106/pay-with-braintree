@@ -7,6 +7,7 @@ import { DataTable } from "@/components/data-table";
 import { Heading } from "@/components/heading";
 import { Nonce as PrismaNonce } from "@prisma/client";
 import { columns } from "./columns";
+import { fetcher } from "@/lib/fetcher";
 import { useModal } from "@/hooks/use-modal-store";
 
 const NoncesPage = () => {
@@ -15,9 +16,8 @@ const NoncesPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch("/api/v1/nonces");
-            const newData = await response.json();
-            setData(newData);
+            const res = await fetcher("/api/v1/nonces");
+            setData(res);
         };
         fetchData();
     }, [setData]);
@@ -44,7 +44,7 @@ const transformData = (data: PrismaNonce[] | null) => {
     if (!data) {
         return [];
     }
-    
+
     return data.map((d) => ({
         token: d.token,
         paymentInstrumentType: d.paymentInstrumentType,

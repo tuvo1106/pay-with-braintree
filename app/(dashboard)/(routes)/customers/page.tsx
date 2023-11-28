@@ -5,20 +5,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table";
 import { Heading } from "@/components/heading";
-import axios from "axios";
+import { Customer as PrismaCustomer } from "@prisma/client";
 import { columns } from "./columns";
+import { fetcher } from "@/lib/fetcher";
 import { useModal } from "@/hooks/use-modal-store";
-
-const fakeData = [
-    {
-        name: "Tu Vo",
-        company: "PayPal",
-        email: "test@paypal.com",
-        phone: "55555555555",
-        braintreePublicId: "abc123",
-        createdAt: new Date().toDateString(),
-    },
-];
 
 const CustomerPage = () => {
     const { onOpen } = useModal();
@@ -26,9 +16,8 @@ const CustomerPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch("/api/v1/nonces");
-            const newData = await response.json();
-            setData(null);
+            const res = await fetcher("/api/v1/customers");
+            setData(res);
         };
         fetchData();
     }, [setData]);
@@ -44,11 +33,26 @@ const CustomerPage = () => {
             <div className="px-4 lg:px-8 py-8">
                 <DataTable
                     columns={columns}
-                    data={data || fakeData}
+                    data={transformData(data)}
                 ></DataTable>
             </div>
         </div>
     );
+};
+
+const transformData = (data: PrismaCustomer[] | null) => {
+    if (!data) {
+        return [];
+    }
+
+    return data.map((d) => ({
+        name: `${d.firstName} ${d.lastName}`,
+        company: d.company,
+        email: d.email,
+        phone: d.phone,
+        braintreePublicId: d.braintreePublicId,
+        createdAt: new Date(d.createdAt).toDateString(),
+    }));
 };
 
 export default CustomerPage;

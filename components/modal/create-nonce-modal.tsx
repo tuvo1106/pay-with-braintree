@@ -89,8 +89,7 @@ export const CreateNonceModal = () => {
 
                 try {
                     await axios.post("/api/v1/nonces", tokenizePayload);
-                    // form.reset();
-
+                    form.reset();
                     onClose();
                     //router.refresh();
                 } catch (error) {
