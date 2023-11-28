@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { CreateCustomerModal } from "@/components/modal/create-customer-modal";
 import { CreateNonceModal } from "@/components/modal/create-nonce-modal";
 
 export const ModalProvider = () => {
@@ -18,6 +19,7 @@ export const ModalProvider = () => {
     return (
         <>
             <CreateNonceModal />
+            <CreateCustomerModal />
         </>
     );
 };

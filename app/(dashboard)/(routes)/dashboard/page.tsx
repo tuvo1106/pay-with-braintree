@@ -12,7 +12,7 @@ import {
     getBraintreeClient,
     getLocalPaymentsInstance,
     getUsBankAccountInstance,
-} from "@/utils/braintree";
+} from "@/lib/braintree";
 import { useEffect, useState } from "react";
 
 import { Card } from "@/components/ui/card";

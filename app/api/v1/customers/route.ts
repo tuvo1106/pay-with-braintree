@@ -1,6 +1,6 @@
-import getLogger from "@/utils/logging/logger";
 import { NextResponse } from "next/server";
-import { getBraintreeGateway } from "@/utils/braintree-server";
+import { getBraintreeGateway } from "@/lib/braintree-server";
+import getLogger from "@/lib/logging/logger";
 
 export async function POST(req: Request) {
     const logger = getLogger("/api/v1/customer");

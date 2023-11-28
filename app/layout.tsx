@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { ModalProvider } from "@/providers/modal-provider";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
             <html lang="en" suppressHydrationWarning>
                 <body className={inter.className}>
                     <ModalProvider />
+                    <Toaster />
                     {children}
                 </body>
             </html>

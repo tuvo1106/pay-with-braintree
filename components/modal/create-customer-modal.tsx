@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/select";
 import { getBraintreeClient, getUsBankAccountInstance } from "@/lib/braintree";
 
-import { ACH_MANDATE_TEXT } from "@/lib/constants";
 import { BraintreeError } from "braintree-web";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -32,7 +31,6 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useModal } from "@/hooks/use-modal-store";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const accountTypeEnum = z.enum(["SAVINGS", "CHECKING"]);
@@ -52,11 +50,26 @@ const formSchema = z.object({
     ownershipType: ownershipTypeEnum,
 });
 
-export const CreateNonceModal = () => {
+export const CreateCustomerModal = () => {
     const { isOpen, onClose, type, data } = useModal();
-    const router = useRouter();
 
-    const isModalOpen = isOpen && type == "createNonce";
+    const isModalOpen = isOpen && type == "createCustomer";
+
+    const createCustomer = async () => {
+        try {
+            const payload = {
+                firstName: "Gary",
+                lastName: "Planton",
+                company: "Banksy Trading Co",
+                email: "banksytradingco@gmail.com",
+                phone: "5555555555",
+            };
+            const res = await axios.post("/api/v1/customers", payload);
+            console.log(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const tokenizationKey =
         process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY;
@@ -136,7 +149,7 @@ export const CreateNonceModal = () => {
 
         usBankAccountInstance.tokenize(
             {
-                mandateText: ACH_MANDATE_TEXT,
+                mandateText: "",
                 bankDetails,
                 bankLogin: null,
             },

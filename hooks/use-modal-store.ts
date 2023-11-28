@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type ModalType = "createNonce";
+export type ModalType = "createNonce" | "createCustomer";
 
 interface ModalData {
     nonce?: string;
