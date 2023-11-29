@@ -12,15 +12,15 @@ import { useModal } from "@/hooks/use-modal-store";
 
 const NoncesPage = () => {
     const { onOpen } = useModal();
-    const [data, setData] = useState(null);
+    const [nonces, setNonces] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchNonces = async () => {
             const res = await fetcher("/api/v1/nonces");
-            setData(res);
+            setNonces(res);
         };
-        fetchData();
-    }, [setData]);
+        fetchNonces();
+    }, [setNonces]);
 
     return (
         <div>
@@ -33,28 +33,30 @@ const NoncesPage = () => {
             <div className="px-4 lg:px-8 py-8">
                 <DataTable
                     columns={columns}
-                    data={transformData(data)}
+                    data={transformData(nonces)}
                 ></DataTable>
             </div>
         </div>
     );
 };
 
-const transformData = (data: PrismaNonce[] | null) => {
-    if (!data) {
+const transformData = (nonces: PrismaNonce[] | null) => {
+    if (!nonces) {
         return [];
     }
 
-    return data.map((d) => ({
-        token: d.token,
-        paymentInstrumentType: d.paymentInstrumentType,
-        createdAt: new Date(d.createdAt).toTimeString(),
-        expiredAt: getNonceExpirationTime(new Date(d.createdAt)).toTimeString(),
+    return nonces.map((nonce) => ({
+        token: nonce.token,
+        paymentInstrumentType: nonce.paymentInstrumentType,
+        createdAt: new Date(nonce.createdAt).toTimeString(),
+        expiredAt: getNonceExpirationTime(
+            new Date(nonce.createdAt)
+        ).toTimeString(),
     }));
 };
 
-const getNonceExpirationTime = (d: Date) => {
-    const currentTime = d.getTime();
+const getNonceExpirationTime = (date: Date) => {
+    const currentTime = date.getTime();
     return new Date(currentTime + 3 * 60 * 60 * 1000);
 };
 

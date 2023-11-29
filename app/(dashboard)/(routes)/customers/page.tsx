@@ -12,15 +12,15 @@ import { useModal } from "@/hooks/use-modal-store";
 
 const CustomerPage = () => {
     const { onOpen } = useModal();
-    const [data, setData] = useState(null);
+    const [customers, setCustomers] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCustomers = async () => {
             const res = await fetcher("/api/v1/customers");
-            setData(res);
+            setCustomers(res);
         };
-        fetchData();
-    }, [setData]);
+        fetchCustomers();
+    }, [setCustomers]);
 
     return (
         <div>
@@ -33,25 +33,25 @@ const CustomerPage = () => {
             <div className="px-4 lg:px-8 py-8">
                 <DataTable
                     columns={columns}
-                    data={transformData(data)}
+                    data={transformData(customers)}
                 ></DataTable>
             </div>
         </div>
     );
 };
 
-const transformData = (data: PrismaCustomer[] | null) => {
-    if (!data) {
+const transformData = (customers: PrismaCustomer[] | null) => {
+    if (!customers) {
         return [];
     }
 
-    return data.map((d) => ({
-        name: `${d.firstName} ${d.lastName}`,
-        company: d.company,
-        email: d.email,
-        phone: d.phone,
-        braintreePublicId: d.braintreePublicId,
-        createdAt: new Date(d.createdAt).toDateString(),
+    return customers.map((customer) => ({
+        name: `${customer.firstName} ${customer.lastName}`,
+        company: customer.company,
+        email: customer.email,
+        phone: customer.phone,
+        braintreePublicId: customer.braintreePublicId,
+        createdAt: new Date(customer.createdAt).toDateString(),
     }));
 };
 

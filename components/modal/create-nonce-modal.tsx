@@ -35,8 +35,8 @@ import { useModal } from "@/hooks/use-modal-store";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const accountTypeEnum = z.enum(["SAVINGS", "CHECKING"]);
-const ownershipTypeEnum = z.enum(["BUSINESS", "PERSONAL"]);
+const accountTypeEnum = z.enum(["SAVINGS", "CHECKING", "UNKNOWN"]);
+const ownershipTypeEnum = z.enum(["BUSINESS", "PERSONAL", "UNKNOWN"]);
 
 const formSchema = z.object({
     accountNumber: z
@@ -91,7 +91,7 @@ export const CreateNonceModal = () => {
                     await axios.post("/api/v1/nonces", tokenizePayload);
                     form.reset();
                     onClose();
-                    //router.refresh();
+                    router.refresh();
                 } catch (error) {
                     console.log(error);
                 }
@@ -149,8 +149,8 @@ export const CreateNonceModal = () => {
             accountNumber: "1000000000",
             routingNumber: "121042882",
             accountHolderName: "Tu Vo",
-            accountType: accountTypeEnum.Enum.CHECKING,
-            ownershipType: ownershipTypeEnum.Enum.PERSONAL,
+            accountType: accountTypeEnum.Enum.UNKNOWN,
+            ownershipType: ownershipTypeEnum.Enum.UNKNOWN,
         },
     });
 

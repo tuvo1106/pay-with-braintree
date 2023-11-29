@@ -1,3 +1,5 @@
+import { INTERNALS } from "next/dist/server/web/spec-extension/request";
+import { INTERNAL_ERROR } from "@/lib/constants";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getBraintreeGateway } from "@/lib/braintree-server";
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
             `Braintree customer created: ${JSON.stringify(btCustomer)} `
         );
 
-        const res = await db.customer.create({
+        const record = await db.customer.create({
             data: {
                 firstName,
                 lastName,
@@ -40,12 +42,12 @@ export async function POST(req: Request) {
             },
         });
 
-        logger.info(`Record created: ${JSON.stringify(res)} `);
+        logger.info(`Record created: ${JSON.stringify(record)} `);
 
-        return NextResponse.json(res);
+        return NextResponse.json(record);
     } catch (error) {
         logger.error(error);
-        return new NextResponse("Internal error", { status: 500 });
+        return new NextResponse(INTERNAL_ERROR, { status: 500 });
     }
 }
 
@@ -59,6 +61,6 @@ export async function GET(req: Request) {
         return NextResponse.json(customers);
     } catch (error) {
         logger.error(error);
-        return new NextResponse("Internal error", { status: 500 });
+        return new NextResponse(INTERNAL_ERROR, { status: 500 });
     }
 }

@@ -1,9 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/heading";
 import axios from "axios";
+import { useModal } from "@/hooks/use-modal-store";
 
 const TransactionsPage = () => {
+    const { onOpen } = useModal();
     const createSale = async () => {
         try {
             const payload = {
@@ -18,9 +21,11 @@ const TransactionsPage = () => {
     };
     return (
         <div>
-            <Heading title="Payment Methods" description="lorem ipsum" />
+            <Heading title="Transactions" description="lorem ipsum" />
             <div className="px-4 lg:px-8">
-                <button onClick={createSale}>SALE</button>
+                <Button onClick={() => onOpen("vaultPaymentMethod")}>
+                    Create a transaction
+                </Button>
             </div>
         </div>
     );
