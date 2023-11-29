@@ -37,12 +37,6 @@ export const CreateCustomerModal = () => {
 
     const isModalOpen = isOpen && type == "createCustomer";
 
-    const tokenizationKey =
-        process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY;
-    if (!tokenizationKey) {
-        return <div className="">Error</div>;
-    }
-
     const handleClose = () => {
         form.reset();
         onClose();

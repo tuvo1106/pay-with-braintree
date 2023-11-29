@@ -9,9 +9,11 @@ export async function POST(req: Request) {
     const logger = getLogger("POST /api/v1/payment_methods");
 
     try {
-        const gateway = getBraintreeGateway();
+        const gateway = await getBraintreeGateway();
+        const params = await req.json();
+        logger.info(`Params: ${params}`);
         const { paymentMethodNonce, braintreeCustomerId, verificationMethod } =
-            await req.json();
+            params;
 
         if (
             !paymentMethodNonce ||
@@ -33,7 +35,7 @@ export async function POST(req: Request) {
         logger.info(response);
 
         if (!response.success) {
-            logger.info(`Error creating payment method: ${response}`);
+            logger.info("Error creating payment method");
             return new NextResponse(INTERNAL_ERROR, { status: 500 });
         }
 

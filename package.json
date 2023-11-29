@@ -28,6 +28,7 @@
         "braintree-web": "^3.97.3",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.0.0",
+        "currency.js": "^2.0.4",
         "lucide-react": "^0.292.0",
         "next": "14.0.3",
         "pino": "^8.16.2",

@@ -2,9 +2,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export type CustomerRow = {
     name: string;
-    company: string;
+    company: string | null;
     email: string;
-    phone: string;
+    phone: string | null;
     braintreePublicId: string;
     createdAt: string;
 };
