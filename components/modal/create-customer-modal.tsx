@@ -49,6 +49,7 @@ export const CreateCustomerModal = () => {
             form.reset();
             onClose();
         } catch (error) {
+            toast.error("Error creating customer");
             console.log(error);
         }
     };

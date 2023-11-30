@@ -8,6 +8,7 @@ import getLogger from "@/lib/logging/logger";
 
 export async function POST(req: Request) {
     const logger = getLogger("/api/v1/transactions");
+
     try {
         const gateway = getBraintreeGateway();
         const params = await req.json();
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
         });
 
         if (!response.success) {
-            logger.info("Error creating transaction");
+            logger.error("Error creating transaction");
             return new NextResponse(INTERNAL_ERROR, { status: 500 });
         }
 
@@ -46,10 +47,9 @@ export async function POST(req: Request) {
 
         logger.info(`Record created: ${JSON.stringify(record)} `);
 
-        return NextResponse.json({});
+        return NextResponse.json(record);
     } catch (error) {
         logger.error(error);
-        logger.error(process.env);
         return new NextResponse(INTERNAL_ERROR, { status: 500 });
     }
 }

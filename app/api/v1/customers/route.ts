@@ -1,5 +1,5 @@
-import { INTERNALS } from "next/dist/server/web/spec-extension/request";
-import { INTERNAL_ERROR } from "@/lib/constants";
+import { INTERNAL_ERROR, INVALID_PARAMS } from "@/lib/constants";
+
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getBraintreeGateway } from "@/lib/braintree-server";
@@ -11,7 +11,13 @@ export async function POST(req: Request) {
     try {
         const gateway = getBraintreeGateway();
         const params = await req.json();
+        logger.info(`Params: ${JSON.stringify(params)}`);
         const { firstName, lastName, company, email, phone } = params;
+
+        if (!firstName || !lastName || !company || !email || !phone) {
+            logger.error(INVALID_PARAMS);
+            return new NextResponse(INVALID_PARAMS, { status: 422 });
+        }
 
         const response = await gateway.customer.create({
             firstName,
@@ -22,8 +28,8 @@ export async function POST(req: Request) {
         });
 
         if (!response.success) {
-            logger.info(`Error creating customer: ${response}`);
-            return new NextResponse("Internal error", { status: 500 });
+            logger.error(`Error creating customer: ${response}`);
+            return new NextResponse(INTERNAL_ERROR, { status: 500 });
         }
 
         const btCustomer = response.customer;

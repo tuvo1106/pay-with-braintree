@@ -53,7 +53,7 @@ const formSchema = z.object({
 });
 
 export const CreateNonceModal = () => {
-    const { isOpen, onClose, type, data } = useModal();
+    const { isOpen, onClose, type } = useModal();
     const router = useRouter();
 
     const isModalOpen = isOpen && type == "createNonce";
@@ -61,7 +61,8 @@ export const CreateNonceModal = () => {
     const tokenizationKey =
         process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY;
     if (!tokenizationKey) {
-        return <div className="">Error</div>;
+        toast.error("")
+        return null
     }
 
     const handleClose = () => {

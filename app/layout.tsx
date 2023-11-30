@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { ModalProvider } from "@/providers/modal-provider";
 import { Toaster } from "sonner";
+import { validateEnv } from "@/lib/safetyChecks";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,13 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
+    if (!validateEnv()) {
+        console.log(
+            "Environmental variable set up is invalid. Please see SETUP.MD"
+        );
+        return null;
+    }
+
     return (
         <ClerkProvider>
             <html lang="en" suppressHydrationWarning>

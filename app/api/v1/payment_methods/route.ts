@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         logger.info(response);
 
         if (!response.success) {
-            logger.info("Error creating payment method");
+            logger.error("Error creating payment method");
             return new NextResponse(INTERNAL_ERROR, { status: 500 });
         }
 

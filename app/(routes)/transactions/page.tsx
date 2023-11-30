@@ -38,13 +38,11 @@ const TransactionsPage = () => {
                     data={transformData(transactions)}
                 ></DataTable>
             </div>
-            <p>}</p>
         </div>
     );
 };
 
 const transformData = (transactions: PrismaTransaction[] | null) => {
-    console.log(transactions)
     if (!transactions) {
         return [];
     }

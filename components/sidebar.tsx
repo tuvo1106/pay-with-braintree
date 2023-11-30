@@ -4,7 +4,6 @@ import {
     Banknote,
     CircleDollarSign,
     Landmark,
-    LayoutDashboard,
     Settings,
     User2,
 } from "lucide-react";
@@ -15,12 +14,6 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
 const routes = [
-    {
-        label: "Dashboard",
-        icon: LayoutDashboard,
-        href: "/dashboard",
-        color: "text-sky-500",
-    },
     {
         label: "Nonces",
         icon: CircleDollarSign,
@@ -59,7 +52,7 @@ const SideBar = () => {
         <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white">
             <div className="px-3 py-2 flex-1">
                 <Link
-                    href="/dashboard"
+                    href="/"
                     className="flex items-center pl-3 mb-14"
                 >
                     <div className="relative w-48 h-16 mr-4">

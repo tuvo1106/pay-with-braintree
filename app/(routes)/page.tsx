@@ -7,16 +7,9 @@ import {
     Landmark,
     User2,
 } from "lucide-react";
-import { BraintreeError, LocalPaymentTypes } from "braintree-web";
-import {
-    getBraintreeClient,
-    getLocalPaymentsInstance,
-    getUsBankAccountInstance,
-} from "@/lib/braintree";
 import { useEffect, useState } from "react";
 
 import { Card } from "@/components/ui/card";
-import axios from "axios";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -28,6 +21,7 @@ export default function DashboardPage() {
     useEffect(() => {
         setHydrated(true);
     }, []);
+    
     if (!hydrated) {
         return null;
     }

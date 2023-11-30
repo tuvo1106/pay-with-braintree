@@ -1,25 +1,35 @@
+import { INTERNAL_ERROR, INVALID_PARAMS, US_BANK_ACCOUNT } from "@/lib/constants";
+
 import { NextResponse } from "next/server";
-import { US_BANK_ACCOUNT } from "@/lib/constants";
 import { db } from "@/lib/db";
 import getLogger from "@/lib/logging/logger";
 
 export async function POST(req: Request) {
     const logger = getLogger("POST /api/v1/nonces");
-    try {
-        const { nonce } = await req.json();
 
-        const res = await db.nonce.create({
+    try {
+        const params = await req.json();
+        logger.info(`Params: ${JSON.stringify(params)}`);
+        const { nonce } = params;
+
+        if (!nonce) {
+            logger.error(INVALID_PARAMS);
+            return new NextResponse(INVALID_PARAMS, { status: 422 });
+        }
+
+        const record = await db.nonce.create({
             data: {
                 paymentInstrumentType: US_BANK_ACCOUNT,
                 token: nonce,
             },
         });
 
-        logger.info(`Record created: ${JSON.stringify(res)} `);
+        logger.info(`Record created: ${JSON.stringify(record)} `);
 
-        return NextResponse.json(res);
+        return NextResponse.json(record);
     } catch (error) {
         logger.error(error);
+        return new NextResponse(INTERNAL_ERROR, { status: 500 });
     }
 }
 
@@ -33,6 +43,6 @@ export async function GET(req: Request) {
         return NextResponse.json(nonces);
     } catch (error) {
         logger.error(error);
-        return new NextResponse("Internal error", { status: 500 });
+        return new NextResponse(INTERNAL_ERROR, { status: 500 });
     }
 }
