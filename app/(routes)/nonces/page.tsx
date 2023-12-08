@@ -25,9 +25,14 @@ const NoncesPage = () => {
     return (
         <div>
             <Heading title="Nonces" description="lorem ipsum" />
+            <div className="px-4 lg:px-8 py-4">
+                <Button onClick={() => onOpen("createAchNonce")}>
+                    Tokenize an ACH nonce
+                </Button>
+            </div>
             <div className="px-4 lg:px-8">
-                <Button onClick={() => onOpen("createNonce")}>
-                    Tokenize a nonce
+                <Button onClick={() => onOpen("createLpmNonce")}>
+                    Tokenize an LPM nonce
                 </Button>
             </div>
             <div className="px-4 lg:px-8 py-8">

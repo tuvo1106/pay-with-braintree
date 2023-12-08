@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import { CreateAchNonceModal } from "@/components/modal/create-ach-nonce-modal";
 import { CreateCustomerModal } from "@/components/modal/create-customer-modal";
-import { CreateNonceModal } from "@/components/modal/create-nonce-modal";
+import { CreateLpmNonceModal } from "@/components/modal/create-lpm-nonce-modal";
 import { CreateTransactionModal } from "@/components/modal/create-transaction-modal";
 import { VaultPaymentMethodModal } from "@/components/modal/vault-payment-method-modal";
 
@@ -20,7 +21,8 @@ export const ModalProvider = () => {
 
     return (
         <>
-            <CreateNonceModal />
+            <CreateAchNonceModal />
+            <CreateLpmNonceModal />
             <CreateCustomerModal />
             <VaultPaymentMethodModal />
             <CreateTransactionModal />

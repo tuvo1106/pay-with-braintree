@@ -38,6 +38,8 @@ const verificationMethodEnum = z.enum([
     "unknown",
 ]);
 
+const verificationAddOnsEnum = z.enum(["customer_verification", "unknown"]);
+
 const formSchema = z.object({
     paymentMethodNonce: z
         .string()
@@ -46,6 +48,7 @@ const formSchema = z.object({
         .string()
         .min(1, { message: "Braintree Customer ID is required." }),
     verificationMethod: verificationMethodEnum,
+    verificationAddOns: verificationAddOnsEnum,
 });
 
 export const VaultPaymentMethodModal = () => {
@@ -74,6 +77,7 @@ export const VaultPaymentMethodModal = () => {
             paymentMethodNonce: "",
             braintreeCustomerId: "15211990216",
             verificationMethod: verificationMethodEnum.Enum.unknown,
+            verificationAddOns: verificationAddOnsEnum.Enum.unknown,
         },
     });
 
@@ -160,6 +164,34 @@ export const VaultPaymentMethodModal = () => {
                                                 </SelectItem>
                                                 <SelectItem value="micro_transfers">
                                                     MICRO-TRANSFERS
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            ></FormField>
+                            <FormField
+                                control={form.control}
+                                name="verificationAddOns"
+                                render={({ field }) => (
+                                    <FormItem className="text-xs font-bold text-zinc-500 dark:text-secondary">
+                                        <FormLabel>
+                                            VERIFICATION ADD ONS
+                                        </FormLabel>
+                                        <Select
+                                            disabled={isLoading}
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                                                    <SelectValue placeholder="Select a verification add on" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="customer_verification">
+                                                    CUSTOMER_VERIFICATION
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>

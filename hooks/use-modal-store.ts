@@ -1,7 +1,8 @@
 import { create } from "zustand";
 
 export type ModalType =
-    | "createNonce"
+    | "createAchNonce"
+    | "createLpmNonce"
     | "createCustomer"
     | "vaultPaymentMethod"
     | "createTransaction";

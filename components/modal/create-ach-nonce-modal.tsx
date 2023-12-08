@@ -52,17 +52,17 @@ const formSchema = z.object({
     ownershipType: ownershipTypeEnum,
 });
 
-export const CreateNonceModal = () => {
+export const CreateAchNonceModal = () => {
     const { isOpen, onClose, type } = useModal();
     const router = useRouter();
 
-    const isModalOpen = isOpen && type == "createNonce";
+    const isModalOpen = isOpen && type == "createAchNonce";
 
     const tokenizationKey =
         process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY;
     if (!tokenizationKey) {
-        toast.error("")
-        return null
+        toast.error("");
+        return null;
     }
 
     const handleClose = () => {

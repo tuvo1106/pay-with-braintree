@@ -11,9 +11,13 @@ export async function POST(req: Request) {
     try {
         const gateway = await getBraintreeGateway();
         const params = await req.json();
-        logger.info(`Params: ${params}`);
-        const { paymentMethodNonce, braintreeCustomerId, verificationMethod } =
-            params;
+        logger.info(`Params: ${JSON.stringify(params)}`);
+        const {
+            paymentMethodNonce,
+            braintreeCustomerId,
+            verificationMethod,
+            verificationAddOns,
+        } = params;
 
         if (
             !paymentMethodNonce ||
@@ -24,13 +28,23 @@ export async function POST(req: Request) {
             return new NextResponse(INVALID_PARAMS, { status: 422 });
         }
 
+        const options: any = {
+            usBankAccountVerificationMethod: verificationMethod,
+        };
+
+        if (verificationAddOns === "customer_verification") {
+            options["verificationAddOns"] = "CUSTOMER_VERIFICATION";
+        }
+
         const response = await gateway.paymentMethod.create({
             customerId: braintreeCustomerId,
             paymentMethodNonce,
-            options: {
-                // @ts-ignore
-                usBankAccountVerificationMethod: verificationMethod,
-            },
+            options: options,
+            // options: {
+            // @ts-ignore
+            //     usBankAccountVerificationMethod: verificationMethod,
+            //     verificationAddOns: "CUSTOMER_VERIFICATION",
+            // },
         });
         logger.info(response);
 

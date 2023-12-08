@@ -20,7 +20,7 @@ export const getUsBankAccountInstance = async (client: braintree.Client) => {
     }
 };
 
-export const getLocalPaymentsInstance = async (client: braintree.Client) => {
+export const getLocalPaymentInstance = async (client: braintree.Client) => {
     try {
         return await braintree.localPayment.create({ client: client });
     } catch (error) {

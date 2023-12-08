@@ -28,7 +28,7 @@ const formSchema = z.object({
     paymentMethodToken: z
         .string()
         .min(1, { message: "Payment method token is required." }),
-    amount: z.number().min(1, { message: "Amount is required" }),
+    amount: z.string().min(1, { message: "Amount is required" }),
 });
 
 export const CreateTransactionModal = () => {
@@ -56,7 +56,7 @@ export const CreateTransactionModal = () => {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            amount: 1.23,
+            amount: "1.23",
             paymentMethodToken: "",
         },
     });
