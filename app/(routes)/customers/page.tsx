@@ -1,26 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table";
 import { Heading } from "@/components/heading";
 import { Customer as PrismaCustomer } from "@prisma/client";
 import { columns } from "./columns";
-import { fetcher } from "@/lib/fetcher";
+import fetcher from "@/lib/fetcher";
 import { useModal } from "@/hooks/use-modal-store";
+import useSWR from "swr";
 
 const CustomerPage = () => {
     const { onOpen } = useModal();
-    const [customers, setCustomers] = useState(null);
-
-    useEffect(() => {
-        const fetchCustomers = async () => {
-            const res = await fetcher("/api/v1/customers");
-            setCustomers(res);
-        };
-        fetchCustomers();
-    }, [setCustomers]);
+    const { data, isLoading } = useSWR<PrismaCustomer[]>(
+        "/api/v1/customers",
+        fetcher
+    );
 
     return (
         <div>
@@ -30,17 +24,19 @@ const CustomerPage = () => {
                     Create a customer
                 </Button>
             </div>
-            <div className="px-4 lg:px-8 py-8">
-                <DataTable
-                    columns={columns}
-                    data={transformData(customers)}
-                ></DataTable>
-            </div>
+            {!isLoading && (
+                <div className="px-4 lg:px-8 py-8">
+                    <DataTable
+                        columns={columns}
+                        data={transformData(data)}
+                    ></DataTable>
+                </div>
+            )}
         </div>
     );
 };
 
-const transformData = (customers: PrismaCustomer[] | null) => {
+const transformData = (customers: PrismaCustomer[] | undefined) => {
     if (!customers) {
         return [];
     }
