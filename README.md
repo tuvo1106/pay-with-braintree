@@ -4,7 +4,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, install npm modules:
+
+```bash
+npm install
+```
+
+If you are having issues, you may need to delete `package.lock` file and try again.
+
+Run the development server:
 
 ```bash
 npm run dev

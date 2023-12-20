@@ -22,7 +22,6 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 ```
 NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY=<your-tokenization-key>
 BRAINTREE_MERCHANT_ID=<your-public-id>
-BRAINTREE_PUBLIC_KEY<your-public-key>
+BRAINTREE_PUBLIC_KEY=<your-public-key>
 BRAINTREE_PRIVATE_KEY=<your-private-key>
 ```
-

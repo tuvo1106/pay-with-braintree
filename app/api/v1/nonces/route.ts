@@ -1,48 +1,56 @@
-import { INTERNAL_ERROR, INVALID_PARAMS, US_BANK_ACCOUNT } from "@/lib/constants";
+import {
+  INTERNAL_ERROR,
+  INVALID_PARAMS,
+  US_BANK_ACCOUNT,
+} from "@/lib/constants";
+import { noncesRouteSchema } from "@/schema";
 
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getLogger from "@/lib/logging/logger";
 
 export async function POST(req: Request) {
-    const logger = getLogger("POST /api/v1/nonces");
+  const logger = getLogger("POST /api/v1/nonces");
 
-    try {
-        const params = await req.json();
-        logger.info(`Params: ${JSON.stringify(params)}`);
-        const { nonce } = params;
+  try {
+    const params = await req.json();
+    logger.info(`Params: ${JSON.stringify(params)}`);
 
-        if (!nonce) {
-            logger.error(INVALID_PARAMS);
-            return new NextResponse(INVALID_PARAMS, { status: 422 });
-        }
+    const validatedParams = noncesRouteSchema.safeParse(params);
 
-        const record = await db.nonce.create({
-            data: {
-                paymentInstrumentType: US_BANK_ACCOUNT,
-                token: nonce,
-            },
-        });
-
-        logger.info(`Record created: ${JSON.stringify(record)} `);
-
-        return NextResponse.json(record);
-    } catch (error) {
-        logger.error(error);
-        return new NextResponse(INTERNAL_ERROR, { status: 500 });
+    if (!validatedParams.success) {
+      logger.error(INVALID_PARAMS);
+      return new NextResponse(INVALID_PARAMS, { status: 422 });
     }
+
+    const { nonce } = validatedParams.data;
+
+    const record = await db.nonce.create({
+      data: {
+        paymentInstrumentType: US_BANK_ACCOUNT,
+        token: nonce,
+      },
+    });
+
+    logger.info(`Record created: ${JSON.stringify(record)} `);
+
+    return NextResponse.json(record);
+  } catch (error) {
+    logger.error(error);
+    return new NextResponse(INTERNAL_ERROR, { status: 500 });
+  }
 }
 
 export async function GET(req: Request) {
-    const logger = getLogger("GET /api/v1/nonces");
+  const logger = getLogger("GET /api/v1/nonces");
 
-    try {
-        const nonces = await db.nonce.findMany({});
-        logger.info(`Nonces found: ${nonces.length}`);
+  try {
+    const nonces = await db.nonce.findMany({});
+    logger.info(`Nonces found: ${nonces.length}`);
 
-        return NextResponse.json(nonces);
-    } catch (error) {
-        logger.error(error);
-        return new NextResponse(INTERNAL_ERROR, { status: 500 });
-    }
+    return NextResponse.json(nonces);
+  } catch (error) {
+    logger.error(error);
+    return new NextResponse(INTERNAL_ERROR, { status: 500 });
+  }
 }
