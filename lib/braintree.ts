@@ -28,3 +28,18 @@ export const getLocalPaymentInstance = async (client: braintree.Client) => {
         return null;
     }
 };
+
+export const getVenmoInstance = async (client: braintree.Client) => {
+    try {
+        return braintree.venmo.create({
+            client: client,
+            allowDesktop: true,
+            mobileWebFallBack: true,
+            allowDesktopWebLogin: true,
+            paymentMethodUsage: "multi_use",
+        });
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};

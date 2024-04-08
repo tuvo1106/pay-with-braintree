@@ -35,8 +35,9 @@ model Customer {
 
 model PaymentMethod {
   id String @id @default(uuid())
-  status String
-  verified Boolean @default(false)
+  paymentInstrument String
+  status String?
+  verified Boolean? @default(false)
   braintreePublicId String @unique
 
   createdAt DateTime @default(now())
@@ -45,7 +46,8 @@ model PaymentMethod {
 
 model Transaction {
   id String @id @default(uuid())
-  amount Int
+  paymentInstrument String
+  amount Float
   braintreePublicId String @unique
 
   createdAt DateTime @default(now())

@@ -15,13 +15,21 @@ const PaymentMethodsPage = () => {
         "/api/v1/payment_methods",
         fetcher
     );
-    
+
     return (
         <div>
-            <Heading title="Payment Methods" description="lorem ipsum" />
+            <Heading
+                title="Payment Methods"
+                description="Vault a payment method"
+            />
             <div className="px-4 lg:px-8">
-                <Button onClick={() => onOpen("vaultPaymentMethod")}>
-                    Vault a payment method
+                <Button onClick={() => onOpen("vaultAchPaymentMethod")}>
+                    Vault an ACH payment method
+                </Button>
+            </div>
+            <div className="px-4 lg:px-8 py-4">
+                <Button onClick={() => onOpen("vaultVenmoPaymentMethod")}>
+                    Vault a Venmo payment method
                 </Button>
             </div>
             {!isLoading && (
@@ -43,6 +51,7 @@ const transformData = (paymentMethods: PrismaPaymentMethod[] | undefined) => {
 
     return paymentMethods.map((paymentMethod) => ({
         braintreePublicId: paymentMethod.braintreePublicId,
+        paymentInstrument: paymentMethod.paymentInstrument,
         verified: paymentMethod.verified,
         status: paymentMethod.status,
         createdAt: new Date(paymentMethod.createdAt).toDateString(),

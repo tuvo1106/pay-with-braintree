@@ -44,6 +44,7 @@ const transformData = (transactions: PrismaTransaction[] | undefined) => {
     return transactions.map((transaction) => ({
         amount: currency(transaction.amount).toString(),
         braintreePublicId: transaction.braintreePublicId,
+        paymentInstrument: transaction.paymentInstrument,
         createdAt: new Date(transaction.createdAt).toDateString(),
     }));
 };

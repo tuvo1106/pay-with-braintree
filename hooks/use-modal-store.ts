@@ -4,7 +4,8 @@ export type ModalType =
     | "createAchNonce"
     | "createLpmNonce"
     | "createCustomer"
-    | "vaultPaymentMethod"
+    | "vaultAchPaymentMethod"
+    | "vaultVenmoPaymentMethod"
     | "createTransaction";
 
 interface ModalData {
