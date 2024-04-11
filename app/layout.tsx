@@ -1,6 +1,5 @@
 import "./globals.css";
 
-import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { ModalProvider } from "@/providers/modal-provider";
@@ -23,17 +22,15 @@ export default function RootLayout({
     validateEnv();
 
     return (
-        <ClerkProvider>
-            <html lang="en" suppressHydrationWarning>
-                <body className={inter.className}>
-                    <ModalProvider />
-                    <Toaster />
-                    <Script src="https://js.braintreegateway.com/web/3.101.0/js/client.min.js" />
-                    <Script src="https://js.braintreegateway.com/web/3.101.0/js/venmo.min.js" />
-                    <Script src="https://js.braintreegateway.com/web/3.101.0/js/data-collector.min.js" />
-                    {children}
-                </body>
-            </html>
-        </ClerkProvider>
+        <html lang="en" suppressHydrationWarning>
+            <body className={inter.className}>
+                <ModalProvider />
+                <Toaster />
+                <Script src="https://js.braintreegateway.com/web/3.101.0/js/client.min.js" />
+                <Script src="https://js.braintreegateway.com/web/3.101.0/js/venmo.min.js" />
+                <Script src="https://js.braintreegateway.com/web/3.101.0/js/data-collector.min.js" />
+                {children}
+            </body>
+        </html>
     );
 }

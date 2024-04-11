@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-export default function DashboardPage() {
+export default function HomePage() {
     const router = useRouter();
 
     const [hydrated, setHydrated] = useState(false);
@@ -21,7 +21,7 @@ export default function DashboardPage() {
     useEffect(() => {
         setHydrated(true);
     }, []);
-    
+
     if (!hydrated) {
         return null;
     }
