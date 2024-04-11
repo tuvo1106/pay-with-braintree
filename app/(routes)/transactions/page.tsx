@@ -1,37 +1,24 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table";
 import { Heading } from "@/components/heading";
 import { Transaction as PrismaTransaction } from "@prisma/client";
 import { columns } from "./columns";
 import currency from "currency.js";
-import fetcher from "@/lib/fetcher";
-import { useModal } from "@/hooks/use-modal-store";
-import useSWR from "swr";
+import { db } from "@/lib/db";
+import TransactionSelect from "@/components/transactionSelect";
 
-const TransactionsPage = () => {
-    const { onOpen } = useModal();
-    const { data, isLoading } = useSWR<PrismaTransaction[]>(
-        "/api/v1/transactions",
-        fetcher
-    );
+const TransactionsPage = async () => {
+    const data = await db.transaction.findMany({});
+
     return (
         <div>
-            <Heading title="Transactions" description="lorem ipsum" />
-            <div className="px-4 lg:px-8">
-                <Button onClick={() => onOpen("createTransaction")}>
-                    Create a transaction
-                </Button>
+            <Heading title="Transactions" description="Create a transaction" />
+            <TransactionSelect />
+            <div className="px-4 lg:px-8 py-8">
+                <DataTable
+                    columns={columns}
+                    data={transformData(data)}
+                ></DataTable>
             </div>
-            {!isLoading && (
-                <div className="px-4 lg:px-8 py-8">
-                    <DataTable
-                        columns={columns}
-                        data={transformData(data)}
-                    ></DataTable>
-                </div>
-            )}
         </div>
     );
 };

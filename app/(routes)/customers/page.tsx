@@ -1,37 +1,23 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table";
 import { Heading } from "@/components/heading";
 import { Customer as PrismaCustomer } from "@prisma/client";
 import { columns } from "./columns";
-import fetcher from "@/lib/fetcher";
-import { useModal } from "@/hooks/use-modal-store";
-import useSWR from "swr";
+import { db } from "@/lib/db";
+import CustomerSelect from "@/components/customerSelect";
 
-const CustomerPage = () => {
-    const { onOpen } = useModal();
-    const { data, isLoading } = useSWR<PrismaCustomer[]>(
-        "/api/v1/customers",
-        fetcher
-    );
+const CustomerPage = async () => {
+    const data = await db.customer.findMany({});
 
     return (
         <div>
             <Heading title="Customers" description="lorem ipsum" />
-            <div className="px-4 lg:px-8">
-                <Button onClick={() => onOpen("createCustomer")}>
-                    Create a customer
-                </Button>
+            <CustomerSelect />
+            <div className="px-4 lg:px-8 py-8">
+                <DataTable
+                    columns={columns}
+                    data={transformData(data)}
+                ></DataTable>
             </div>
-            {!isLoading && (
-                <div className="px-4 lg:px-8 py-8">
-                    <DataTable
-                        columns={columns}
-                        data={transformData(data)}
-                    ></DataTable>
-                </div>
-            )}
         </div>
     );
 };
