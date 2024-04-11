@@ -12,7 +12,9 @@
         "db:push": "npx prisma db push",
         "db:reset": "npx prisma migrate reset",
         "db:client": "npx prisma studio",
-        "test": "jest"
+        "test": "jest",
+        "prettier": "prettier --config .prettierrc --check \"**/*.{js,jsx,json,css,scss,html}\"",
+        "prettier-fix": "prettier --config .prettierrc --write \"**/*.{js,jsx,json,css,scss,html}\""
     },
     "dependencies": {
         "@clerk/nextjs": "^4.27.1",
@@ -59,6 +61,7 @@
         "jest-environment-jsdom": "^29.7.0",
         "next-router-mock": "^0.9.13",
         "postcss": "^8",
+        "prettier": "3.2.5",
         "prisma": "^5.6.0",
         "tailwindcss": "^3.3.0",
         "typescript": "^5"
