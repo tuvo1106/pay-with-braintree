@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod"
 
 import {
     Dialog,
@@ -6,7 +6,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -14,41 +14,41 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
 
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import axios from "axios";
-import { customerFormSchema } from "@/schema";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { useModal } from "@/hooks/use-modal-store";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import axios from "axios"
+import { customerFormSchema } from "@/schema"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { useModal } from "@/hooks/use-modal-store"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
 
 export const CreateCustomerModal = () => {
-    const router = useRouter();
-    const { isOpen, onClose, type } = useModal();
+    const router = useRouter()
+    const { isOpen, onClose, type } = useModal()
 
-    const isModalOpen = isOpen && type == "createCustomer";
+    const isModalOpen = isOpen && type == "createCustomer"
 
     const handleClose = () => {
-        form.reset();
-        onClose();
-    };
+        form.reset()
+        onClose()
+    }
 
     const onSubmit = async (values: z.infer<typeof customerFormSchema>) => {
         try {
-            await axios.post("/api/v1/customers", values);
-            toast.success("Customer created");
-            form.reset();
-            onClose();
-            router.refresh();
+            await axios.post("/api/v1/customers", values)
+            toast.success("Customer created")
+            form.reset()
+            onClose()
+            router.refresh()
         } catch (error) {
-            toast.error("Error creating customer");
-            console.log(error);
+            toast.error("Error creating customer")
+            console.log(error)
         }
-    };
+    }
 
     const form = useForm({
         resolver: zodResolver(customerFormSchema),
@@ -59,9 +59,9 @@ export const CreateCustomerModal = () => {
             email: "",
             phone: "",
         },
-    });
+    })
 
-    const isLoading = form.formState.isSubmitting;
+    const isLoading = form.formState.isSubmitting
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -172,5 +172,5 @@ export const CreateCustomerModal = () => {
                 </Form>
             </DialogContent>
         </Dialog>
-    );
-};
+    )
+}

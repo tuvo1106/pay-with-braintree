@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from "zustand"
 
 export type ModalType =
     | "createAchNonce"
@@ -6,18 +6,18 @@ export type ModalType =
     | "createCustomer"
     | "vaultAchPaymentMethod"
     | "vaultVenmoPaymentMethod"
-    | "createTransaction";
+    | "createTransaction"
 
 interface ModalData {
-    nonce?: string;
+    nonce?: string
 }
 
 interface ModalStore {
-    type: ModalType | null;
-    data: ModalData;
-    isOpen: boolean;
-    onOpen: (type: ModalType, data?: ModalData) => void;
-    onClose: () => void;
+    type: ModalType | null
+    data: ModalData
+    isOpen: boolean
+    onOpen: (type: ModalType, data?: ModalData) => void
+    onClose: () => void
 }
 
 export const useModal = create<ModalStore>((set) => ({
@@ -26,4 +26,4 @@ export const useModal = create<ModalStore>((set) => ({
     isOpen: false,
     onOpen: (type, data = {}) => set({ isOpen: true, type, data }),
     onClose: () => set({ type: null, isOpen: false }),
-}));
+}))

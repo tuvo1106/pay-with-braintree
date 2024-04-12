@@ -1,6 +1,6 @@
 interface HeadingProps {
-    title: string;
-    description: string;
+    title: string
+    description: string
 }
 
 export const Heading = ({ title, description }: HeadingProps) => {
@@ -15,5 +15,5 @@ export const Heading = ({ title, description }: HeadingProps) => {
                 </div>
             </div>
         </>
-    );
-};
+    )
+}

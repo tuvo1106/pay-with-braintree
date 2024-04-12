@@ -1,28 +1,28 @@
-import { INTERNAL_ERROR, INVALID_PARAMS } from "@/lib/constants";
+import { INTERNAL_ERROR, INVALID_PARAMS } from "@/lib/constants"
 
-import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { getBraintreeGateway } from "@/lib/braintree-server";
-import getLogger from "@/lib/logging/logger";
-import { transactionFormSchema } from "@/schema";
-import currency from "currency.js";
+import { NextResponse } from "next/server"
+import { db } from "@/lib/db"
+import { getBraintreeGateway } from "@/lib/braintree-server"
+import getLogger from "@/lib/logging/logger"
+import { transactionFormSchema } from "@/schema"
+import currency from "currency.js"
 
 export async function POST(req: Request) {
-    const logger = getLogger("/api/v1/transactions");
+    const logger = getLogger("/api/v1/transactions")
 
     try {
-        const gateway = getBraintreeGateway();
-        const params = await req.json();
-        logger.info(`Params: ${JSON.stringify(params)}`);
+        const gateway = getBraintreeGateway()
+        const params = await req.json()
+        logger.info(`Params: ${JSON.stringify(params)}`)
 
-        const validateParams = transactionFormSchema.safeParse(params);
+        const validateParams = transactionFormSchema.safeParse(params)
 
         if (!validateParams.success) {
-            logger.error(INVALID_PARAMS);
-            return new NextResponse(INVALID_PARAMS, { status: 422 });
+            logger.error(INVALID_PARAMS)
+            return new NextResponse(INVALID_PARAMS, { status: 422 })
         }
 
-        const { amount, paymentMethodToken } = validateParams.data;
+        const { amount, paymentMethodToken } = validateParams.data
 
         const response = await gateway.transaction.sale({
             amount,
@@ -30,17 +30,17 @@ export async function POST(req: Request) {
             options: {
                 submitForSettlement: true,
             },
-        });
+        })
 
         if (!response.success) {
-            logger.error("Error creating transaction");
-            return new NextResponse(INTERNAL_ERROR, { status: 500 });
+            logger.error("Error creating transaction")
+            return new NextResponse(INTERNAL_ERROR, { status: 500 })
         }
 
-        const btTransaction = response.transaction;
+        const btTransaction = response.transaction
         logger.info(
-            `Braintree transaction created: ${JSON.stringify(btTransaction)} `
-        );
+            `Braintree transaction created: ${JSON.stringify(btTransaction)} `,
+        )
 
         const record = await db.transaction.create({
             data: {
@@ -49,27 +49,27 @@ export async function POST(req: Request) {
                     btTransaction.paymentInstrumentType.toLocaleUpperCase(),
                 amount: currency(btTransaction.amount).value,
             },
-        });
+        })
 
-        logger.info(`Record created: ${JSON.stringify(record)} `);
+        logger.info(`Record created: ${JSON.stringify(record)} `)
 
-        return NextResponse.json(record);
+        return NextResponse.json(record)
     } catch (error) {
-        logger.error(error);
-        return new NextResponse(INTERNAL_ERROR, { status: 500 });
+        logger.error(error)
+        return new NextResponse(INTERNAL_ERROR, { status: 500 })
     }
 }
 
 export async function GET(req: Request) {
-    const logger = getLogger("GET /api/v1/transactions");
+    const logger = getLogger("GET /api/v1/transactions")
 
     try {
-        const transactions = await db.transaction.findMany({});
-        logger.info(`Transactions found: ${transactions.length}`);
+        const transactions = await db.transaction.findMany({})
+        logger.info(`Transactions found: ${transactions.length}`)
 
-        return NextResponse.json(transactions);
+        return NextResponse.json(transactions)
     } catch (error) {
-        logger.error(error);
-        return new NextResponse(INTERNAL_ERROR, { status: 500 });
+        logger.error(error)
+        return new NextResponse(INTERNAL_ERROR, { status: 500 })
     }
 }

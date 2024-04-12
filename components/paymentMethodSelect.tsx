@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { useModal } from "@/hooks/use-modal-store";
+import { Button } from "@/components/ui/button"
+import { useModal } from "@/hooks/use-modal-store"
 
 export const PaymentMethodSelect = () => {
-    const { onOpen } = useModal();
+    const { onOpen } = useModal()
 
     return (
         <>
@@ -14,7 +14,7 @@ export const PaymentMethodSelect = () => {
                 </Button>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default PaymentMethodSelect;
+export default PaymentMethodSelect

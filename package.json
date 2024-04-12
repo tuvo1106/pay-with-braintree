@@ -13,8 +13,8 @@
         "db:reset": "npx prisma migrate reset",
         "db:client": "npx prisma studio",
         "test": "jest",
-        "prettier": "prettier --config .prettierrc --check \"**/*.{js,jsx,json,css,scss,html}\"",
-        "prettier-fix": "prettier --config .prettierrc --write \"**/*.{js,jsx,json,css,scss,html}\""
+        "prettier": "prettier --config .prettierrc --check \"**/*.{js,jsx,ts,tsx,json,css,scss,html}\"",
+        "prettier-fix": "prettier --config .prettierrc --write \"**/*.{js,jsx,ts,tsx,json,css,scss,html}\""
     },
     "dependencies": {
         "@clerk/nextjs": "^4.27.1",

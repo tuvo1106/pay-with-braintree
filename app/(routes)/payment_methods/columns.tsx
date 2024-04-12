@@ -1,12 +1,12 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type PaymentMethodRow = {
-    braintreePublicId: string;
-    paymentInstrument: string;
-    verified: boolean | null;
-    status: string | null;
-    createdAt: string;
-};
+    braintreePublicId: string
+    paymentInstrument: string
+    verified: boolean | null
+    status: string | null
+    createdAt: string
+}
 
 export const columns: ColumnDef<PaymentMethodRow>[] = [
     {
@@ -29,4 +29,4 @@ export const columns: ColumnDef<PaymentMethodRow>[] = [
         accessorKey: "createdAt",
         header: "Created At",
     },
-];
+]

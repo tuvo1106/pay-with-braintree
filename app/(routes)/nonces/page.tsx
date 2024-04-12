@@ -1,12 +1,12 @@
-import { DataTable } from "@/components/data-table";
-import { Heading } from "@/components/heading";
-import { Nonce as PrismaNonce } from "@prisma/client";
-import { columns } from "./columns";
-import { db } from "@/lib/db";
-import TokenizationSelect from "@/components/tokenizationSelect";
+import { DataTable } from "@/components/data-table"
+import { Heading } from "@/components/heading"
+import { Nonce as PrismaNonce } from "@prisma/client"
+import { columns } from "./columns"
+import { db } from "@/lib/db"
+import TokenizationSelect from "@/components/tokenizationSelect"
 
 const NoncesPage = async () => {
-    const data = await db.nonce.findMany({});
+    const data = await db.nonce.findMany({})
 
     return (
         <div>
@@ -19,12 +19,12 @@ const NoncesPage = async () => {
                 ></DataTable>
             </div>
         </div>
-    );
-};
+    )
+}
 
 const transformData = (nonces: PrismaNonce[] | undefined) => {
     if (!nonces) {
-        return [];
+        return []
     }
 
     return nonces.map((nonce) => ({
@@ -32,14 +32,14 @@ const transformData = (nonces: PrismaNonce[] | undefined) => {
         paymentInstrumentType: nonce.paymentInstrumentType,
         createdAt: new Date(nonce.createdAt).toTimeString(),
         expiredAt: getNonceExpirationTime(
-            new Date(nonce.createdAt)
+            new Date(nonce.createdAt),
         ).toTimeString(),
-    }));
-};
+    }))
+}
 
 const getNonceExpirationTime = (date: Date) => {
-    const currentTime = date.getTime();
-    return new Date(currentTime + 3 * 60 * 60 * 1000);
-};
+    const currentTime = date.getTime()
+    return new Date(currentTime + 3 * 60 * 60 * 1000)
+}
 
-export default NoncesPage;
+export default NoncesPage

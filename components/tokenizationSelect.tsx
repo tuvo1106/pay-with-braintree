@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { useModal } from "@/hooks/use-modal-store";
-import { getBraintreeClient, getVenmoInstance } from "@/lib/braintree";
-import axios from "axios";
+import { Button } from "@/components/ui/button"
+import { useModal } from "@/hooks/use-modal-store"
+import { getBraintreeClient, getVenmoInstance } from "@/lib/braintree"
+import axios from "axios"
 
 export const TokenizationSelect = () => {
-    const { onOpen } = useModal();
+    const { onOpen } = useModal()
 
     const tokenizationKey =
-        process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY;
+        process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY
     if (!tokenizationKey) {
-        return null;
+        return null
     }
 
     return (
@@ -32,30 +32,30 @@ export const TokenizationSelect = () => {
                 </Button>
             </div>
         </>
-    );
-};
+    )
+}
 
 const venmoOnClickHander = async (tokenizationKey: string) => {
-    const client = await getBraintreeClient(tokenizationKey);
+    const client = await getBraintreeClient(tokenizationKey)
     if (!client) {
-        return null;
+        return null
     }
 
-    const venmoInstance = await getVenmoInstance(client);
+    const venmoInstance = await getVenmoInstance(client)
     if (!venmoInstance) {
-        return null;
+        return null
     }
 
     if (!venmoInstance.isBrowserSupported()) {
-        return null;
+        return null
     }
 
     try {
-        const tokenizePayload = await venmoInstance.tokenize();
-        console.log(tokenizePayload);
-        await axios.post("/api/v1/nonces", tokenizePayload);
+        const tokenizePayload = await venmoInstance.tokenize()
+        console.log(tokenizePayload)
+        await axios.post("/api/v1/nonces", tokenizePayload)
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
-};
-export default TokenizationSelect;
+}
+export default TokenizationSelect

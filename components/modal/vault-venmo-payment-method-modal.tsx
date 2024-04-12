@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod"
 
 import {
     Dialog,
@@ -6,7 +6,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -14,43 +14,43 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
 
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import axios from "axios";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { useModal } from "@/hooks/use-modal-store";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import axios from "axios"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { useModal } from "@/hooks/use-modal-store"
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
     paymentMethodFormSchema,
     verificationAddOnsEnum,
     verificationMethodEnum,
-} from "@/schema";
-import { VENMO_ACCOUNT } from "@/lib/constants";
+} from "@/schema"
+import { VENMO_ACCOUNT } from "@/lib/constants"
 
 export const VaultVenmoPaymentMethodModal = () => {
-    const { isOpen, onClose, type } = useModal();
-    const isModalOpen = isOpen && type == "vaultVenmoPaymentMethod";
+    const { isOpen, onClose, type } = useModal()
+    const isModalOpen = isOpen && type == "vaultVenmoPaymentMethod"
 
     const handleClose = () => {
-        form.reset();
-        onClose();
-    };
+        form.reset()
+        onClose()
+    }
 
     const onSubmit = async (
-        values: z.infer<typeof paymentMethodFormSchema>
+        values: z.infer<typeof paymentMethodFormSchema>,
     ) => {
         try {
-            await axios.post("/api/v1/payment_methods", values);
-            toast.success("Payment method created");
-            form.reset();
-            onClose();
+            await axios.post("/api/v1/payment_methods", values)
+            toast.success("Payment method created")
+            form.reset()
+            onClose()
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
-    };
+    }
 
     const form = useForm({
         resolver: zodResolver(paymentMethodFormSchema),
@@ -61,11 +61,11 @@ export const VaultVenmoPaymentMethodModal = () => {
             verificationMethod: verificationMethodEnum.Enum.unknown,
             verificationAddOns: verificationAddOnsEnum.Enum.unknown,
         },
-    });
+    })
 
-    const isLoading = form.formState.isSubmitting;
+    const isLoading = form.formState.isSubmitting
 
-    form.getFieldState("paymentMethodNonce");
+    form.getFieldState("paymentMethodNonce")
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -129,5 +129,5 @@ export const VaultVenmoPaymentMethodModal = () => {
                 </Form>
             </DialogContent>
         </Dialog>
-    );
-};
+    )
+}

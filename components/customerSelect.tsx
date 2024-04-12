@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { useModal } from "@/hooks/use-modal-store";
+import { Button } from "@/components/ui/button"
+import { useModal } from "@/hooks/use-modal-store"
 
 export const CustomerSelect = () => {
-    const { onOpen } = useModal();
+    const { onOpen } = useModal()
 
     return (
         <>
@@ -14,7 +14,7 @@ export const CustomerSelect = () => {
                 </Button>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default CustomerSelect;
+export default CustomerSelect

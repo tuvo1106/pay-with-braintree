@@ -1,5 +1,5 @@
-import NavBar from "@/components/navbar";
-import SideBar from "@/components/sidebar";
+import NavBar from "@/components/navbar"
+import SideBar from "@/components/sidebar"
 
 const DashBoardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -12,7 +12,7 @@ const DashBoardLayout = ({ children }: { children: React.ReactNode }) => {
                 {children}
             </main>
         </div>
-    );
-};
+    )
+}
 
-export default DashBoardLayout;
+export default DashBoardLayout

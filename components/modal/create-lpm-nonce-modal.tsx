@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod"
 
 import {
     Dialog,
@@ -6,7 +6,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -14,30 +14,30 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { getBraintreeClient, getLocalPaymentInstance } from "@/lib/braintree";
+} from "@/components/ui/select"
+import { getBraintreeClient, getLocalPaymentInstance } from "@/lib/braintree"
 
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { useModal } from "@/hooks/use-modal-store";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { lpmNonceSchema, paymentTypeEnum } from "@/schema";
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { useModal } from "@/hooks/use-modal-store"
+import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { lpmNonceSchema, paymentTypeEnum } from "@/schema"
 
 export const CreateLpmNonceModal = () => {
-    const { isOpen, onClose, type } = useModal();
-    const router = useRouter();
+    const { isOpen, onClose, type } = useModal()
+    const router = useRouter()
 
-    const isModalOpen = isOpen && type == "createLpmNonce";
+    const isModalOpen = isOpen && type == "createLpmNonce"
 
     const form = useForm({
         resolver: zodResolver(lpmNonceSchema),
@@ -48,36 +48,36 @@ export const CreateLpmNonceModal = () => {
             givenName: "",
             surname: "",
         },
-    });
+    })
 
     const tokenizationKey =
-        process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY;
+        process.env.NEXT_PUBLIC_BRAINTREE_SDK_TOKENIZATION_KEY
     if (!tokenizationKey) {
-        toast.error("");
-        return null;
+        toast.error("")
+        return null
     }
 
     const handleClose = () => {
-        form.reset();
-        onClose();
-    };
+        form.reset()
+        onClose()
+    }
 
     const onSubmit = async (values: z.infer<typeof lpmNonceSchema>) => {
-        const client = await getBraintreeClient(tokenizationKey);
+        const client = await getBraintreeClient(tokenizationKey)
         if (!client) {
-            toast.error("Braintree client unavailable");
-            return null;
+            toast.error("Braintree client unavailable")
+            return null
         }
-        const localPaymentInstance = await getLocalPaymentInstance(client);
+        const localPaymentInstance = await getLocalPaymentInstance(client)
         if (!localPaymentInstance) {
-            toast.error("Local payment instance unavailable");
-            return;
+            toast.error("Local payment instance unavailable")
+            return
         }
 
         const handlePaymentStart = async function (payload: any, start: any) {
-            console.log(payload);
-            start();
-        };
+            console.log(payload)
+            start()
+        }
 
         try {
             const response = await localPaymentInstance.startPayment({
@@ -91,22 +91,22 @@ export const CreateLpmNonceModal = () => {
                     buttonText: "Complete Payment",
                 },
                 onPaymentStart: handlePaymentStart,
-            });
+            })
 
-            console.log(response);
-            toast.success("Tokenization successful");
+            console.log(response)
+            toast.success("Tokenization successful")
 
             // await axios.post("/api/v1/nonces", tokenizePayload);
-            form.reset();
-            onClose();
-            router.refresh();
+            form.reset()
+            onClose()
+            router.refresh()
         } catch (error) {
-            console.log(error);
-            toast.error("Tokenization unsuccessful");
+            console.log(error)
+            toast.error("Tokenization unsuccessful")
         }
-    };
+    }
 
-    const isLoading = form.formState.isSubmitting;
+    const isLoading = form.formState.isSubmitting
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -236,5 +236,5 @@ export const CreateLpmNonceModal = () => {
                 </Form>
             </DialogContent>
         </Dialog>
-    );
-};
+    )
+}

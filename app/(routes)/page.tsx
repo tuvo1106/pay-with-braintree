@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
     ArrowRight,
@@ -6,24 +6,24 @@ import {
     CircleDollarSign,
     Landmark,
     User2,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+} from "lucide-react"
+import { useEffect, useState } from "react"
 
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 export default function HomePage() {
-    const router = useRouter();
+    const router = useRouter()
 
-    const [hydrated, setHydrated] = useState(false);
+    const [hydrated, setHydrated] = useState(false)
 
     useEffect(() => {
-        setHydrated(true);
-    }, []);
+        setHydrated(true)
+    }, [])
 
     if (!hydrated) {
-        return null;
+        return null
     }
 
     const tools = [
@@ -55,7 +55,7 @@ export default function HomePage() {
             color: "text-orange-700",
             bgColor: "bg-orange-700/10",
         },
-    ];
+    ]
 
     return (
         <div>
@@ -79,7 +79,7 @@ export default function HomePage() {
                             <div
                                 className={cn(
                                     "p-2 w-fit rounded-md",
-                                    tool.bgColor
+                                    tool.bgColor,
                                 )}
                             >
                                 <tool.icon
@@ -93,5 +93,5 @@ export default function HomePage() {
                 ))}
             </div>
         </div>
-    );
+    )
 }

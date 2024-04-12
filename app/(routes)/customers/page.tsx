@@ -1,12 +1,12 @@
-import { DataTable } from "@/components/data-table";
-import { Heading } from "@/components/heading";
-import { Customer as PrismaCustomer } from "@prisma/client";
-import { columns } from "./columns";
-import { db } from "@/lib/db";
-import CustomerSelect from "@/components/customerSelect";
+import { DataTable } from "@/components/data-table"
+import { Heading } from "@/components/heading"
+import { Customer as PrismaCustomer } from "@prisma/client"
+import { columns } from "./columns"
+import { db } from "@/lib/db"
+import CustomerSelect from "@/components/customerSelect"
 
 const CustomerPage = async () => {
-    const data = await db.customer.findMany({});
+    const data = await db.customer.findMany({})
 
     return (
         <div>
@@ -19,12 +19,12 @@ const CustomerPage = async () => {
                 ></DataTable>
             </div>
         </div>
-    );
-};
+    )
+}
 
 const transformData = (customers: PrismaCustomer[] | undefined) => {
     if (!customers) {
-        return [];
+        return []
     }
 
     return customers.map((customer) => ({
@@ -34,7 +34,7 @@ const transformData = (customers: PrismaCustomer[] | undefined) => {
         phone: customer.phone,
         braintreePublicId: customer.braintreePublicId,
         createdAt: new Date(customer.createdAt).toDateString(),
-    }));
-};
+    }))
+}
 
-export default CustomerPage;
+export default CustomerPage

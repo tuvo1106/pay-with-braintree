@@ -1,13 +1,13 @@
-import { DataTable } from "@/components/data-table";
-import { Heading } from "@/components/heading";
-import { Transaction as PrismaTransaction } from "@prisma/client";
-import { columns } from "./columns";
-import currency from "currency.js";
-import { db } from "@/lib/db";
-import TransactionSelect from "@/components/transactionSelect";
+import { DataTable } from "@/components/data-table"
+import { Heading } from "@/components/heading"
+import { Transaction as PrismaTransaction } from "@prisma/client"
+import { columns } from "./columns"
+import currency from "currency.js"
+import { db } from "@/lib/db"
+import TransactionSelect from "@/components/transactionSelect"
 
 const TransactionsPage = async () => {
-    const data = await db.transaction.findMany({});
+    const data = await db.transaction.findMany({})
 
     return (
         <div>
@@ -20,12 +20,12 @@ const TransactionsPage = async () => {
                 ></DataTable>
             </div>
         </div>
-    );
-};
+    )
+}
 
 const transformData = (transactions: PrismaTransaction[] | undefined) => {
     if (!transactions) {
-        return [];
+        return []
     }
 
     return transactions.map((transaction) => ({
@@ -33,7 +33,7 @@ const transformData = (transactions: PrismaTransaction[] | undefined) => {
         braintreePublicId: transaction.braintreePublicId,
         paymentInstrument: transaction.paymentInstrument,
         createdAt: new Date(transaction.createdAt).toDateString(),
-    }));
-};
+    }))
+}
 
-export default TransactionsPage;
+export default TransactionsPage

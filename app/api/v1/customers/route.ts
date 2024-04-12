@@ -1,28 +1,28 @@
-import { INTERNAL_ERROR, INVALID_PARAMS } from "@/lib/constants";
+import { INTERNAL_ERROR, INVALID_PARAMS } from "@/lib/constants"
 
-import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { getBraintreeGateway } from "@/lib/braintree-server";
-import getLogger from "@/lib/logging/logger";
-import { customerFormSchema } from "@/schema";
+import { NextResponse } from "next/server"
+import { db } from "@/lib/db"
+import { getBraintreeGateway } from "@/lib/braintree-server"
+import getLogger from "@/lib/logging/logger"
+import { customerFormSchema } from "@/schema"
 
 export async function POST(req: Request) {
-    const logger = getLogger("POST /api/v1/customer");
+    const logger = getLogger("POST /api/v1/customer")
 
     try {
-        const gateway = getBraintreeGateway();
-        const params = await req.json();
-        logger.info(`Params: ${JSON.stringify(params)}`);
+        const gateway = getBraintreeGateway()
+        const params = await req.json()
+        logger.info(`Params: ${JSON.stringify(params)}`)
 
-        const validatedParams = customerFormSchema.safeParse(params);
+        const validatedParams = customerFormSchema.safeParse(params)
 
         if (!validatedParams.success) {
-            logger.error(INVALID_PARAMS);
-            return new NextResponse(INVALID_PARAMS, { status: 422 });
+            logger.error(INVALID_PARAMS)
+            return new NextResponse(INVALID_PARAMS, { status: 422 })
         }
 
         const { firstName, lastName, company, email, phone } =
-            validatedParams.data;
+            validatedParams.data
 
         const response = await gateway.customer.create({
             firstName,
@@ -30,17 +30,17 @@ export async function POST(req: Request) {
             company,
             email,
             phone,
-        });
+        })
 
         if (!response.success) {
-            logger.error(`Error creating customer: ${response}`);
-            return new NextResponse(INTERNAL_ERROR, { status: 500 });
+            logger.error(`Error creating customer: ${response}`)
+            return new NextResponse(INTERNAL_ERROR, { status: 500 })
         }
 
-        const btCustomer = response.customer;
+        const btCustomer = response.customer
         logger.info(
-            `Braintree customer created: ${JSON.stringify(btCustomer)} `
-        );
+            `Braintree customer created: ${JSON.stringify(btCustomer)} `,
+        )
 
         const record = await db.customer.create({
             data: {
@@ -51,27 +51,27 @@ export async function POST(req: Request) {
                 phone,
                 braintreePublicId: btCustomer.id,
             },
-        });
+        })
 
-        logger.info(`Record created: ${JSON.stringify(record)} `);
+        logger.info(`Record created: ${JSON.stringify(record)} `)
 
-        return NextResponse.json(record);
+        return NextResponse.json(record)
     } catch (error) {
-        logger.error(error);
-        return new NextResponse(INTERNAL_ERROR, { status: 500 });
+        logger.error(error)
+        return new NextResponse(INTERNAL_ERROR, { status: 500 })
     }
 }
 
 export async function GET(req: Request) {
-    const logger = getLogger("GET /api/v1/customers");
+    const logger = getLogger("GET /api/v1/customers")
 
     try {
-        const customers = await db.customer.findMany({});
-        logger.info(`Customers found: ${customers.length}`);
+        const customers = await db.customer.findMany({})
+        logger.info(`Customers found: ${customers.length}`)
 
-        return NextResponse.json(customers);
+        return NextResponse.json(customers)
     } catch (error) {
-        logger.error(error);
-        return new NextResponse(INTERNAL_ERROR, { status: 500 });
+        logger.error(error)
+        return new NextResponse(INTERNAL_ERROR, { status: 500 })
     }
 }

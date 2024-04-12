@@ -1,13 +1,13 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type CustomerRow = {
-    name: string;
-    company: string | null;
-    email: string;
-    phone: string | null;
-    braintreePublicId: string;
-    createdAt: string;
-};
+    name: string
+    company: string | null
+    email: string
+    phone: string | null
+    braintreePublicId: string
+    createdAt: string
+}
 
 export const columns: ColumnDef<CustomerRow>[] = [
     {
@@ -34,4 +34,4 @@ export const columns: ColumnDef<CustomerRow>[] = [
         accessorKey: "createdAt",
         header: "Created At",
     },
-];
+]
